@@ -1,0 +1,344 @@
+---
+title: "SPR Week 1 Exercises"
+author: "Statistical Programming in R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.align="center", out.width="80%")
+library(knitr)
+library(tidyverse)
+```
+
+
+# Vector subsetting
+
+A local animal rescue group is trying to track the effectiveness of their social media presence; they are currently interested in tracking follower growth. The table below summarizes the number of page likes or new followers each day:
+
+
+|         | Sun | Mon | Tues | Wed | Thurs | Fri | Sat |
+|---------|-----|-----|------|-----|-------|-----|-----|
+| FB      | 30  | 43  | 55   | 89  | 71    | 52  | 42  |
+| Twitter | 60  | 32  | 86   | 44  | 21    | 30  | 28  |
+
+Continue this problem from last week by creating vectors for fb and twitter containing the likes/follows for each day. Assign the days of the week ("Sunday", "Monday", etc.) as names for your vectors. 
+
+```{r}
+fb <- c(30,43,55,89,71,52,42)
+twitter <- c(60,32,86,44,21,30,28)
+
+days <- c("Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat")
+
+names(fb) <- days
+names(twitter) <- days
+
+```
+
+
+
+
+__VS1.__ Print just the new fb number of likes/follows from Monday. What about just the likes/follows from the last day in the data set? Can you see which day of the week the last day is (supposing you didn't know it was Saturday)? 
+
+__Your answer:__ Yes, given that the subset of 2 returns the results for Monday, you can assume that 7 would return Saturday.
+
+```{r}
+fb[2]
+```
+
+
+__VS2.__ Print just the weekends' number of fb likes/follows. Can you show two different ways to do this?
+
+__Your answer:__
+
+```{r}
+fb[fb==30|fb==42]
+fb[c(1,7)]
+```
+
+
+__VS3.__ Find which days had more than 50 new likes/follows on FB. 
+
+
+__Your answer:__
+
+```{r}
+fb[fb>50]
+```
+
+
+
+__VS4.__ Let's define a day as "Facebook favorite" if there were more than 50 new likes/follows on FB and fewer than 31 new likes/follows on twitter. Determine whether each day in our data set is a facebook favorite. 
+
+Your output should be a vector of TRUE's and FALSE's, corresponding to each day of the week.
+
+__Your answer:__
+
+```{r}
+twitter<31&fb>50
+
+```
+
+
+__VS5.__ Now print out the number of new fb likes/follows, only for days which are facebook favorites.
+
+
+__Your answer:__
+
+
+```{r}
+fb[twitter<31&fb>50]
+```
+
+
+
+# Matrix exercises
+
+A local animal rescue group is trying to track the effectiveness of their social media presence; they are currently interested in tracking follower growth. The table below summarizes the number of page likes or new followers each day:
+
+
+|         | Sun | Mon | Tues | Wed | Thurs | Fri | Sat |
+|---------|-----|-----|------|-----|-------|-----|-----|
+| FB      | 30  | 43  | 55   | 89  | 71    | 52  | 42  |
+| Twitter | 60  | 32  | 86   | 44  | 21    | 30  | 28  |
+
+
+__ME1.__ Create a matrix with 7 rows and two columns containing the number of new follows for facebook (column 1) and twitter (column 2). Name the rows and columns appropriately ("Mon", "Tues", etc. for each row, and "Facebook", "Twitter" for the columns). 
+
+Save this matrix as "matrix1", and then print it.
+
+Hint 1: This is easiest to do by starting over again with the raw data; it may actually be more challenging to use the named vectors you created earlier. 
+
+Hint 2: Break this problem down into smaller pieces. First create the matrix (there is starter code at the very end of this document if you want it; intermediate students should try it on their own first). Then update your code to save the matrix. Then update your code to add column names, etc.
+
+__Your answer:__
+
+```{r}
+matrix1 <- matrix(c(30,43,55,89,71,52,42,60,32,86,44,21,30,28), nrow = 2, ncol = 7)
+colnames(matrix1) <- days
+rownames(matrix1) <- c("Facebook","Twitter")
+```
+
+
+__ME2.__ Add a column for instagram, and save the result as `matrix2`.  
+
+|         | Sun | Mon | Tues | Wed | Thurs | Fri | Sat |
+|---------|-----|-----|------|-----|-------|-----|-----|
+| Insta   | 45  | 68  | 25   | 76  | 50    | 41  | 44  |
+
+Hint: You can either re-write your code to create a new matrix, or Google how to add a new column to a matrix. There is a function that will do this. 
+
+__Your answer:__
+
+
+```{r}
+matrix2 <- rbind(matrix1, c(45,68,25,76,50,41,44))
+rownames(matrix2) <- c("Facebook","Twitter","Instagram")
+```
+
+
+__ME3.__ Use the transpose operator `t()` so that the rows represent the social media outlet and the columns represent the days of the week. (You may want to look up this function by typing `?t`) 
+
+Save this as a matrix called `social`. It should have three rows (Facebook, Twitter, Instagram) and seven columns (for each day of the week). 
+
+__Your answer:__
+
+```{r}
+social <- t(matrix2)
+```
+
+
+__ME4.__ Suppose we want to double the number of follows each day. Multiply your matrix `social` by 2 with regular multiplication (*). Does it work? 
+
+__Your answer:__ Yup.
+
+```{r}
+social*2
+```
+
+
+
+__ME5.__ Using your `social` matrix, get the Facebook follows from Wednesday. We can subset a matrix using the syntax: `my_matrix[row, column]`. 
+
+
+__Your answer:__
+
+```{r}
+social[4,1]
+```
+
+
+__ME6.__ Use R code to print just the Monday reactions from your `social` matrix. This should be a column with 3 entries.
+
+__Your answer:__
+
+
+```{r}
+social[2,]
+```
+
+__ME7 OPTIONAL Intermediate Challenge.__ Remove the row with facebook follows from the matrix; the remaining matrix should only contain rows for twitter and instagram.
+
+__Your answer:__
+
+```{r}
+
+```
+
+
+__ME8 OPTIONAL Intermediate Challenge.__ (requires some knowledge of matrix multiplication): A marketer gets paid 5 cents per new follow on weekday and 8 cents per follow on weekends. Find the total weekly amount the marketer gets paid per social media outlet.
+
+__Your answer:__
+
+```{r}
+ig <- c(30,43,55,89,71,52,42,60,32,86,44,21,30,28)
+sum(fb[c(1,7)])*0.08+sum(fb[2:6])*0.05
+sum(twitter[c(1,7)])*0.08+sum(twitter[2:6])*0.05
+sum(ig[c(1,7)])*0.08+sum(ig[2:6])*0.05
+```
+
+
+
+__ME9 OPTIONAL Intermediate Challenge.__ How can you swap the order of the rows?
+
+__Your answer:__
+
+```{r}
+
+```
+
+
+
+
+
+
+# Data frames exercises
+
+R has many built in data sets! Let's look at one of them.
+
+__DFE1.__ Look up the `iris` data set in R using the help function (or Google). What is this data? How many observations does it have? 
+
+__Your answer:__ 150 cases, 5 variables
+
+```{r}
+
+```
+
+
+__DFE2.__ Compare the results of calling `typeof()`, `class()`, and `str()` on the iris data set. Which one(s) are most useful?
+
+__Your answer:__ class() gives me the most information considering I'm only aware of what a data.frame is.
+
+```{r}
+
+```
+
+
+__DFE3.__ Print the first 3 rows of the iris data set. 
+
+__Your answer:__
+
+```{r}
+iris[1:3,]
+```
+
+
+__DFE4.__ You can access just one column from a data frame using the `$` operators:   
+
+`my_data$column_name`  
+
+Use this to print just the "Species" column from the iris data set.
+
+__Your answer:__
+
+```{r}
+iris$Species
+```
+
+
+__DFE5.__ Write a logical expression to test whether the first plant's species in the Species column is "setosa". Then try to write a logical expression to test whether the first plant's species is setosa AND its petal length is longer than 1 cm. 
+
+Hint: You need to use the skills/code from the previous question.
+
+__Your answer:__
+
+```{r}
+iris$Species=="setosa"
+iris$Species=="setosa"&iris$Petal.Length>1
+```
+
+
+
+
+__DFE6. OPTIONAL Intermediate__ Print only the rows from the iris data set for plants whose Species is "versicolor". Then write code to determine how many plants fit this condition.
+
+__Your answer:__
+
+```{r}
+sum(iris$Species=="versicolor")
+```
+
+
+
+
+# OPTIONAL Intermediate List exercises (not graded; just for fun if you completed the intermediate reading)
+
+__LE1 OPTIONAL Intermediate.__ Suppose we have data on a book, including the title ("Game of Thrones"), year of publication (1996), and whether the series is complete (FALSE). What happens if we try to store these three pieces of information in a vector?
+
+__Your answer:__ FALSE is seperated by huge space.
+
+
+
+__LE2 OPTIONAL Intermediate.__ Create a list to store the three pieces of information given. Use `list()` to create a new list and call it `book`. 
+
+__Your answer:__
+
+```{r}
+
+```
+
+
+__LE3 OPTIONAL Intermediate.__ Edit your list `book` from the previous exercise so that the first element is called title, the second element is named year, and the third element is named is_complete.
+
+__Your answer:__
+
+
+```{r}
+
+```
+
+__LE4 OPTIONAL Intermediate.__ Use the book list, select just the title. How many ways can you think of to do this?
+
+__Your answer:__
+
+```{r}
+
+```
+
+
+__LE5 OPTIONAL Intermediate.__ Now select just the __first__ available format (not the entire vector of all possible formats). 
+
+__Your answer:__
+
+```{r}
+
+```
+
+
+
+
+#### Hint for Matrix Exercise 1 (ME1)
+
+Starter code to create the matrix: 
+
+```{r}
+fb <- c(30,43,55,89,71,52,42)
+twitter <- c(60,32,86,44,21,30,28)
+
+# modify to set the correct number of rows and columns
+matrix1 <- matrix(c(fb, twitter), byrow = FALSE)
+
+# add code to set the row names
+
+# add code to set the column names
+```
+
